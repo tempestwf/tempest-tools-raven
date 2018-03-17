@@ -10,7 +10,7 @@ namespace TempestTools\Raven\Orm\Helper;
 
 
 use TempestTools\Raven\Contracts\Orm\NotifiableEntityContract;
-use TempestTools\Raven\Laravel\Orm\Notification\GeneralNotification;
+use TempestTools\Raven\Laravel\Orm\Notification\GeneralNotificationAbstract;
 
 class NotificationHelper
 {
@@ -55,11 +55,11 @@ class NotificationHelper
      *
      * @param array $notificationsConfig
      * @param array $params
-     * @param GeneralNotification $notification
+     * @param GeneralNotificationAbstract $notification
      * TODO: Use contract instead of RavenGeneralNotification
      * @throws \RuntimeException
      */
-    protected function populateNotificationDetails(array $notificationsConfig, array $params, GeneralNotification $notification):void {
+    protected function populateNotificationDetails(array $notificationsConfig, array $params, GeneralNotificationAbstract $notification):void {
         $entity = $this->getEntity();
         $via = [];
         $viaConfig = $notificationsConfig['via'];

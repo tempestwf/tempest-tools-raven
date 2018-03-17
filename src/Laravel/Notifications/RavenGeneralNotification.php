@@ -9,6 +9,10 @@ use Illuminate\Notifications\Messages\MailMessage;
 class RavenGeneralNotification extends Notification
 {
     use Queueable;
+    /**
+     * @var array
+     */
+    public $via;
 
     /**
      * Create a new notification instance.
@@ -28,7 +32,7 @@ class RavenGeneralNotification extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return array_keys($this->getVia());
     }
 
     /**
@@ -61,5 +65,21 @@ class RavenGeneralNotification extends Notification
         return [
             //
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getVia(): array
+    {
+        return $this->via;
+    }
+
+    /**
+     * @param array $via
+     */
+    public function setVia(array $via): void
+    {
+        $this->via = $via;
     }
 }

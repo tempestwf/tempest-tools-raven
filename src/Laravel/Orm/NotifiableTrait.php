@@ -11,6 +11,7 @@ namespace TempestTools\Raven\Laravel\Orm;
 
 use LaravelDoctrine\ORM\Notifications\Notifiable;
 use Doctrine\ORM\Mapping as ORM;
+use TempestTools\Raven\Orm\Helper\NotificationHelper;
 use TempestTools\Scribe\Contracts\Orm\Helper\EntityArrayHelperContract;
 
 trait NotifiableTrait
@@ -21,12 +22,16 @@ trait NotifiableTrait
      * @ORM\PreFlush
      */
     public function ravenPreFlush():void {
-        //$config = $this->getConfigArrayHelper()->getArray();
-        //if (isset($config['notifications'])) {
-            //$notificationsConfig =
-        //}
 
-        //$this->notify();
+    }
+
+    /**
+     * Runs the notifications on the entity
+     */
+    public function runNotifications():void {
+        /** @noinspection PhpParamsInspection */
+        $helper = new NotificationHelper($this);
+        $helper->runNotifications();
     }
 
     abstract public function getConfigArrayHelper():?EntityArrayHelperContract;

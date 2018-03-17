@@ -9,11 +9,13 @@
 namespace TempestTools\Raven\Orm\Helper;
 
 
+use TempestTools\Raven\Contracts\Orm\Helper\NotificationHelperContract;
 use TempestTools\Raven\Contracts\Orm\NotifiableEntityContract;
+use TempestTools\Raven\Laravel\Constants\ArrayHelperConstants;
 use TempestTools\Raven\Laravel\Constants\ViaTypesConstants;
 use TempestTools\Raven\Laravel\Orm\Notification\GeneralNotificationAbstract;
 
-class NotificationHelper
+class NotificationHelper implements NotificationHelperContract
 {
     /**
      * @var NotifiableEntityContract
@@ -23,6 +25,27 @@ class NotificationHelper
     public function __construct(NotifiableEntityContract $entity)
     {
         $this->setEntity($entity);
+    }
+
+    /**
+     * registers the notification in a shared array for access by the middleware
+     *
+     * @throws \RuntimeException
+     */
+    public function registerForNotifications():void {
+        $entity = $this->getEntity();
+        $array = $entity->getArrayHelper()->getArray();
+        $config = $entity->getConfigArrayHelper()->getArray();
+        $notificationsConfig = $config['notifications'] ?? [];
+        $params = $params = ['self' => $this, 'entity'=>$entity, 'notificationsConfig'=>$notificationsConfig];
+        $enabled = $config['notifications']['enable'] ?? true;
+        $enabled = $this->getEntity()->getConfigArrayHelper()->parse($enabled, $params);
+        if ($enabled === true && isset($config['notifications']) === true) {
+            if (isset($array[ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
+                $array[ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
+            }
+            $array[ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this->getEntity();
+        }
     }
 
     /**
@@ -39,7 +62,9 @@ class NotificationHelper
             $params = ['self' => $this, 'entity'=>$entity, 'notificationsConfig'=>$notificationsConfig];
             /** @var array $notificationsConfig */
             foreach ($notificationsConfig as $key => $value) {
-                if (isset($value['settings']['closure']) && $entity->getConfigArrayHelper()->parse($value['settings']['closure'], $params) === false) {
+                $enabled = $value['enable'] ?? true;
+                $enabled = $entity->getConfigArrayHelper()->parse($enabled, $params);
+                if ($enabled === false || (isset($value['settings']['closure']) && $entity->getConfigArrayHelper()->parse($value['settings']['closure'], $params) === false)) {
                     continue;
                 }
                 if ($value['notification'] !== null) {

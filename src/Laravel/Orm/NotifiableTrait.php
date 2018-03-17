@@ -13,13 +13,12 @@ use Doctrine\ORM\Event\PreFlushEventArgs;
 use LaravelDoctrine\ORM\Notifications\Notifiable;
 use Doctrine\ORM\Mapping as ORM;
 use TempestTools\Common\Contracts\ArrayHelperContract;
-use TempestTools\Raven\Laravel\Constants\ArrayHelperConstants;
+use TempestTools\Raven\Contracts\Orm\Helper\NotificationHelperContract;
 use TempestTools\Raven\Orm\Helper\NotificationHelper;
 use TempestTools\Scribe\Contracts\Orm\Helper\EntityArrayHelperContract;
 
 /**
  * A trait to apply to an entity to use a configuration in Scribe to send notifications.
- * TODO: turn into a better contract
  * @package TempestTools\Raven\Laravel\Orm
  */
 trait NotifiableTrait
@@ -37,17 +36,22 @@ trait NotifiableTrait
     protected $nexmoTo;
 
     /**
+     * @var NotificationHelperContract
+     */
+    protected $notificationHelper;
+
+    /**
      * a pre flush function that sends out notifications. It adds the notifications to the shared array so they can be processed by listeners created on the middleware
      *
      * @ORM\PreFlush
      * @param PreFlushEventArgs $args
      */
     public function ravenPreFlush(PreFlushEventArgs $args):void {
-        $array = $this->getArrayHelper()->getArray();
-        if (isset($array[ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
-            $array[ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
-        }
-        $array[ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this;
+
+        /** @noinspection PhpParamsInspection */
+        $this->setNotificationHelper(new NotificationHelper($this));
+        $this->getNotificationHelper()->registerForNotifications();
+
     }
 
     /**
@@ -76,9 +80,7 @@ trait NotifiableTrait
      * @throws \RuntimeException
      */
     public function runNotifications():void {
-        /** @noinspection PhpParamsInspection */
-        $helper = new NotificationHelper($this);
-        $helper->runNotifications();
+        $this->getNotificationHelper()->runNotifications();
     }
 
     abstract public function getConfigArrayHelper():?EntityArrayHelperContract;
@@ -118,6 +120,22 @@ trait NotifiableTrait
     public function setNexmoTo(string $nexmoTo): void
     {
         $this->nexmoTo = $nexmoTo;
+    }
+
+    /**
+     * @return NotificationHelperContract
+     */
+    public function getNotificationHelper(): NotificationHelperContract
+    {
+        return $this->notificationHelper;
+    }
+
+    /**
+     * @param NotificationHelperContract $notificationHelper
+     */
+    protected function setNotificationHelper(NotificationHelperContract $notificationHelper): void
+    {
+        $this->notificationHelper = $notificationHelper;
     }
 
 }

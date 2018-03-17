@@ -45,28 +45,34 @@ class GeneralNotificationAbstract extends Notification
 
     /**
      * A method to be overridden add additional stuff to a mail message (such as the sort of things that generally be handled by a view).
+     *
      * @param MailMessage $mailMessage
+     * @param EntityContract $notifiable
      * @return MailMessage
      */
-    protected function addToMailMessage(MailMessage $mailMessage):MailMessage {
+    protected function addToMailMessage(MailMessage $mailMessage, EntityContract $notifiable):MailMessage {
         return $mailMessage;
     }
 
     /**
      * A method to be overridden add additional stuff to a nexmo message (such as the sort of things that generally be handled by a view).
+     *
      * @param NexmoMessage $nexmoMessage
+     * @param EntityContract $notifiable
      * @return NexmoMessage
      */
-    protected function addToNexmoMessage(NexmoMessage $nexmoMessage):NexmoMessage {
+    protected function addToNexmoMessage(NexmoMessage $nexmoMessage, EntityContract $notifiable):NexmoMessage {
         return $nexmoMessage;
     }
 
     /**
      * A method to be overridden add additional stuff to a slack message (such as the sort of things that generally be handled by a view).
+     *
      * @param SlackMessage $slackMessage
+     * @param EntityContract $notifiable
      * @return SlackMessage
      */
-    protected function addToSlackMessage(SlackMessage $slackMessage):SlackMessage {
+    protected function addToSlackMessage(SlackMessage $slackMessage, EntityContract $notifiable):SlackMessage {
         return $slackMessage;
     }
 
@@ -82,6 +88,15 @@ class GeneralNotificationAbstract extends Notification
     }
 
     /**
+     * Removes unneeded things from the settings so it can be applied to a message
+     * @param array $settings
+     * @return array
+     */
+    protected function trimSettings (array $settings):array {
+        unset($settings['settings'], $settings['enabled']);
+        return $settings;
+    }
+    /**
      * Get the mail representation of the notification. If there is a view set on the notification it will apply it to the email, and pass in the entity->toArray as it's view data
      *
      * @param  mixed  $notifiable
@@ -91,10 +106,11 @@ class GeneralNotificationAbstract extends Notification
     {
         $mailMessage = new MailMessage();
         $mailSettings = $this->getVia()[ViaTypesConstants::MAIL] ?? [];
+        $mailSettings = $this->trimSettings($mailSettings);
         foreach ($mailSettings as $key => $value) {
             $mailMessage->$key($value);
         }
-        $mailMessage = $this->addToMailMessage($mailMessage);
+        $mailMessage = $this->addToMailMessage($mailMessage, $notifiable);
         if ($this->getMailView() !== null) {
             $mailMessage->view(
                 $this->getMailView(),
@@ -114,10 +130,11 @@ class GeneralNotificationAbstract extends Notification
     {
         $slackMessage = new SlackMessage();
         $slackSettings = $this->getVia()[ViaTypesConstants::SLACK] ?? [];
+        $slackSettings = $this->trimSettings($slackSettings);
         foreach ($slackSettings as $key => $value) {
             $slackMessage->$key($value);
         }
-        $slackMessage = $this->addToSlackMessage($slackMessage);
+        $slackMessage = $this->addToSlackMessage($slackMessage, $notifiable);
         return $slackMessage;
     }
 
@@ -131,10 +148,11 @@ class GeneralNotificationAbstract extends Notification
     {
         $nexmoMessage = new NexmoMessage();
         $nexmoSettings = $this->getVia()[ViaTypesConstants::NEXMO] ?? [];
+        $nexmoSettings = $this->trimSettings($nexmoSettings);
         foreach ($nexmoSettings as $key => $value) {
             $nexmoMessage->$key($value);
         }
-        $nexmoMessage = $this->addToNexmoMessage($nexmoMessage);
+        $nexmoMessage = $this->addToNexmoMessage($nexmoMessage, $notifiable);
 
         return $nexmoMessage;
     }

@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class RavenGeneralNotification extends Notification
+class GeneralNotification extends Notification
 {
     use Queueable;
     /**

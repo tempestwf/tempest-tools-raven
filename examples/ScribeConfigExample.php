@@ -8,7 +8,7 @@
 
 // The following block would be put at the level just below the context in a scribe config
 use Illuminate\Notifications\Notification;
-use TempestTools\Raven\Laravel\Orm\Notification\RavenGeneralNotification;
+use TempestTools\Raven\Laravel\Orm\Notification\GeneralNotification;
 use LaravelDoctrine\ORM\Notifications\DoctrineChannel;
 
 $config = [

@@ -27,6 +27,8 @@ trait NotifiableTrait
 
     /**
      * Runs the notifications on the entity
+     *
+     * @throws \RuntimeException
      */
     public function runNotifications():void {
         /** @noinspection PhpParamsInspection */

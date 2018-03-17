@@ -43,7 +43,13 @@ $config = [
                         'closure'=>'<closure|null>', // Optional. A closure to test if this should be sent in this via or not
                     ],
                 ],
-                '<DoctrineChannel::class|database|broadcast>'=>[ // Optional. Additional methods of sending notifications which Raven has no additional options for
+                '<DoctrineChannel::class|database>'=>[ // Optional. Additional methods of sending notifications which Raven has no additional options for
+                    'settings'=>[ // Optional. Can be null to disable the block.
+                        'closure'=>'<closure|null>', // Optional. A closure to test if this should be sent in this via or not
+                    ],
+                ],
+                'broadcast'=>[ // Optional. Sends notification as a broadcast. Please note that unlike default notifications
+                    'channel'=>'<string|null>', // A channel to send the notification on. Works with Laravel 5.6
                     'settings'=>[ // Optional. Can be null to disable the block.
                         'closure'=>'<closure|null>', // Optional. A closure to test if this should be sent in this via or not
                     ],

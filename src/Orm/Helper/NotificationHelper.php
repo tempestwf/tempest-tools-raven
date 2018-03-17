@@ -10,6 +10,7 @@ namespace TempestTools\Raven\Orm\Helper;
 
 
 use TempestTools\Raven\Contracts\Orm\NotifiableEntityContract;
+use TempestTools\Raven\Laravel\Constants\ViaTypesConstants;
 use TempestTools\Raven\Laravel\Orm\Notification\GeneralNotificationAbstract;
 
 class NotificationHelper
@@ -66,6 +67,13 @@ class NotificationHelper
         /** @var array $viaConfig */
         foreach ($viaConfig as $key => $value) {
             if (!isset($value['settings']['closure']) || $entity->getConfigArrayHelper()->parse($value['settings']['closure'], $params) === true) {
+                if (isset($value['to'])) {
+                    if ($key === ViaTypesConstants::MAIL) {
+                        $entity->setMailTo($value['to']);
+                    } else if ($key === ViaTypesConstants::NEXMO) {
+                        $entity->setNexmoTo($value['to']);
+                    }
+                }
                 array_walk(
                     $value,
                     function (&$item, $itemKey) use ($params, $entity) {

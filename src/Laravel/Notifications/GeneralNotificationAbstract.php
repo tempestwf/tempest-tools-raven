@@ -3,8 +3,11 @@
 namespace TempestTools\Raven\Laravel\Orm\Notification;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\NexmoMessage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use TempestTools\Raven\Laravel\Constants\ViaTypesConstants;
 use TempestTools\Scribe\Contracts\Orm\EntityContract;
 
 class GeneralNotificationAbstract extends Notification
@@ -26,13 +29,45 @@ class GeneralNotificationAbstract extends Notification
     protected $mailView;
 
     /**
+     * @var EntityContract
+     */
+    protected $entity;
+
+    /**
      * Create a new notification instance.
      *
-     * @return void
+     * @param EntityContract $entity
      */
-    public function __construct()
+    public function __construct(EntityContract $entity)
     {
-        //
+        $this->setEntity($entity);
+    }
+
+    /**
+     * A method to be overridden add additional stuff to a mail message (such as the sort of things that generally be handled by a view).
+     * @param MailMessage $mailMessage
+     * @return MailMessage
+     */
+    protected function addToMailMessage(MailMessage $mailMessage):MailMessage {
+        return $mailMessage;
+    }
+
+    /**
+     * A method to be overridden add additional stuff to a nexmo message (such as the sort of things that generally be handled by a view).
+     * @param NexmoMessage $nexmoMessage
+     * @return NexmoMessage
+     */
+    protected function addToNexmoMessage(NexmoMessage $nexmoMessage):NexmoMessage {
+        return $nexmoMessage;
+    }
+
+    /**
+     * A method to be overridden add additional stuff to a slack message (such as the sort of things that generally be handled by a view).
+     * @param SlackMessage $slackMessage
+     * @return SlackMessage
+     */
+    protected function addToSlackMessage(SlackMessage $slackMessage):SlackMessage {
+        return $slackMessage;
     }
 
     /**
@@ -55,7 +90,7 @@ class GeneralNotificationAbstract extends Notification
     public function toMail(EntityContract $notifiable):MailMessage
     {
         $mailMessage = new MailMessage();
-        $mailSettings = $this->getVia()['mail'] ?? [];
+        $mailSettings = $this->getVia()[ViaTypesConstants::MAIL] ?? [];
         foreach ($mailSettings as $key => $value) {
             $mailMessage->$key($value);
         }
@@ -70,12 +105,51 @@ class GeneralNotificationAbstract extends Notification
     }
 
     /**
-     * A method to be overriden add additional stuff to a mail message (such as the sort of things that generally be handled by a view).
-     * @param MailMessage $mailMessage
-     * @return MailMessage
+     * Get the mail representation of the notification. If there is a view set on the notification it will apply it to the email, and pass in the entity->toArray as it's view data
+     *
+     * @param  mixed  $notifiable
+     * @return \Illuminate\Notifications\Messages\SlackMessage
      */
-    protected function addToMailMessage(MailMessage $mailMessage):MailMessage {
-        return $mailMessage;
+    public function toSlack(EntityContract $notifiable):SlackMessage
+    {
+        $slackMessage = new SlackMessage();
+        $slackSettings = $this->getVia()[ViaTypesConstants::SLACK] ?? [];
+        foreach ($slackSettings as $key => $value) {
+            $slackMessage->$key($value);
+        }
+        $slackMessage = $this->addToSlackMessage($slackMessage);
+        return $slackMessage;
+    }
+
+    /**
+     * Get the Nexmo / SMS representation of the notification.
+     *
+     * @param  mixed  $notifiable
+     * @return NexmoMessage
+     */
+    public function toNexmo(EntityContract $notifiable)
+    {
+        $nexmoMessage = new NexmoMessage();
+        $nexmoSettings = $this->getVia()[ViaTypesConstants::NEXMO] ?? [];
+        foreach ($nexmoSettings as $key => $value) {
+            $nexmoMessage->$key($value);
+        }
+        $nexmoMessage = $this->addToNexmoMessage($nexmoMessage);
+
+        return $nexmoMessage;
+    }
+
+    /**
+     * Sets the broadcast channel for the notification. By default will return like: {notifiable}.{id}. Such as: 'App.User.1'
+     * @return string
+     * TODO: Test this when we upgrade laravel all the way
+     */
+    public function toBroadcast ():string {
+        if (isset($this->getVia()[ViaTypesConstants::BROADCAST]) && $this->getVia()[ViaTypesConstants::BROADCAST]['channel']) {
+            return $this->getVia()[ViaTypesConstants::BROADCAST]['channel'];
+        }
+
+        return preg_replace('/\/', '.', \get_class($this->getEntity())) . '.' . $this->getEntity()->getId();
     }
 
     /**
@@ -119,5 +193,21 @@ class GeneralNotificationAbstract extends Notification
     public function getMailView()
     {
         return $this->mailView;
+    }
+
+    /**
+     * @return EntityContract
+     */
+    public function getEntity(): EntityContract
+    {
+        return $this->entity;
+    }
+
+    /**
+     * @param EntityContract $entity
+     */
+    public function setEntity(EntityContract $entity): void
+    {
+        $this->entity = $entity;
     }
 }

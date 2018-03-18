@@ -58,6 +58,7 @@ class NotificationHelper implements NotificationHelperContract
         $config = $entity->getConfigArrayHelper()->getArray();
         if (isset($config['notifications'])) {
             $notificationsConfig = $config['notifications'];
+            $notificationsConfig = array_replace_recursive($notificationsConfig, $entity->getRavenOverrides());
 
             $params = ['self' => $this, 'entity'=>$entity, 'notificationsConfig'=>$notificationsConfig];
             /** @var array $notificationsConfig */

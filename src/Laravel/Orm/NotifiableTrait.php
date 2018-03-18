@@ -41,6 +41,11 @@ trait NotifiableTrait
     protected $notificationHelper;
 
     /**
+     * @var array these are properties that will override settings stored on the notification for the current context and mode. This can be used to another class (such as a repo) populate that notification settings for the entity.
+     */
+    protected $ravenOverrides =[];
+
+    /**
      * a pre flush function that sends out notifications. It adds the notifications to the shared array so they can be processed by listeners created on the middleware
      *
      * @ORM\PreFlush
@@ -136,6 +141,22 @@ trait NotifiableTrait
     protected function setNotificationHelper(NotificationHelperContract $notificationHelper): void
     {
         $this->notificationHelper = $notificationHelper;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRavenOverrides(): array
+    {
+        return $this->ravenOverrides;
+    }
+
+    /**
+     * @param array $ravenOverrides
+     */
+    public function setRavenOverrides(array $ravenOverrides): void
+    {
+        $this->ravenOverrides = $ravenOverrides;
     }
 
 }

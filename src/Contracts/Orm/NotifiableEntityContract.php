@@ -83,4 +83,14 @@ interface NotifiableEntityContract
      * @return mixed
      */
     public function routeNotificationFor($driver);
+
+    /**
+     * @return array
+     */
+    public function getRavenOverrides(): array;
+
+    /**
+     * @param array $ravenOverrides
+     */
+    public function setRavenOverrides(array $ravenOverrides): void;
 }

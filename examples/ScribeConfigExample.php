@@ -31,6 +31,7 @@ $config = [
                     'settings'=>[ // Optional. Can be null to disable the block.
                         'closure'=>'<closure|null>', // Optional. A closure to test if this should be sent in this via or not
                     ],
+                    'options'=>'<array|null>' // Any additional user options you would like to have passed to your notification
                 ],
                 'nexmo'=>[ // Optional. Sends notifications via nexmo. Note that view logic is still isolated to the notification
                     'enabled'=>'<boolean|null>', // Defaults to true. This is whether or not the via is enabled.
@@ -39,6 +40,7 @@ $config = [
                     'settings'=>[ // Optional. Can be null to disable the block.
                         'closure'=>'<closure|null>', // Optional. A closure to test if this should be sent in this via or not
                     ],
+                    'options'=>'<array|null>' // Any additional user options you would like to have passed to your notification
                 ],
                 'slack'=>[ // Optional. Sends notifications via slack.
                     'enabled'=>'<boolean|null>', // Defaults to true. This is whether or not the via is enabled.
@@ -53,6 +55,7 @@ $config = [
                     'settings'=>[ // Optional. Can be null to disable the block.
                         'closure'=>'<closure|null>', // Optional. A closure to test if this should be sent in this via or not
                     ],
+                    'options'=>'<array|null>' // Any additional user options you would like to have passed to your notification
                 ],
                 'broadcast'=>[ // Optional. Sends notification as a broadcast. Please note that unlike default notifications
                     'enabled'=>'<boolean|null>', // Defaults to true. This is whether or not the via is enabled.
@@ -60,6 +63,7 @@ $config = [
                     'settings'=>[ // Optional. Can be null to disable the block.
                         'closure'=>'<closure|null>', // Optional. A closure to test if this should be sent in this via or not
                     ],
+                    'options'=>'<array|null>' // Any additional user options you would like to have passed to your notification
                 ]
             ]
         ]

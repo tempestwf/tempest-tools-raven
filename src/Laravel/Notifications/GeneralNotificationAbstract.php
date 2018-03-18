@@ -48,9 +48,10 @@ class GeneralNotificationAbstract extends Notification
      *
      * @param MailMessage $mailMessage
      * @param EntityContract $notifiable
+     * @param array $settings
      * @return MailMessage
      */
-    protected function addToMailMessage(MailMessage $mailMessage, EntityContract $notifiable):MailMessage {
+    protected function addToMailMessage(MailMessage $mailMessage, EntityContract $notifiable, array $settings):MailMessage {
         return $mailMessage;
     }
 
@@ -59,9 +60,10 @@ class GeneralNotificationAbstract extends Notification
      *
      * @param NexmoMessage $nexmoMessage
      * @param EntityContract $notifiable
+     * @param array $settings
      * @return NexmoMessage
      */
-    protected function addToNexmoMessage(NexmoMessage $nexmoMessage, EntityContract $notifiable):NexmoMessage {
+    protected function addToNexmoMessage(NexmoMessage $nexmoMessage, EntityContract $notifiable, array $settings):NexmoMessage {
         return $nexmoMessage;
     }
 
@@ -70,9 +72,10 @@ class GeneralNotificationAbstract extends Notification
      *
      * @param SlackMessage $slackMessage
      * @param EntityContract $notifiable
+     * @param array $settings
      * @return SlackMessage
      */
-    protected function addToSlackMessage(SlackMessage $slackMessage, EntityContract $notifiable):SlackMessage {
+    protected function addToSlackMessage(SlackMessage $slackMessage, EntityContract $notifiable, array $settings):SlackMessage {
         return $slackMessage;
     }
 
@@ -110,7 +113,7 @@ class GeneralNotificationAbstract extends Notification
         foreach ($mailSettings as $key => $value) {
             $mailMessage->$key($value);
         }
-        $mailMessage = $this->addToMailMessage($mailMessage, $notifiable);
+        $mailMessage = $this->addToMailMessage($mailMessage, $notifiable, $mailSettings);
         if ($this->getMailView() !== null) {
             $mailMessage->view(
                 $this->getMailView(),
@@ -134,7 +137,7 @@ class GeneralNotificationAbstract extends Notification
         foreach ($slackSettings as $key => $value) {
             $slackMessage->$key($value);
         }
-        $slackMessage = $this->addToSlackMessage($slackMessage, $notifiable);
+        $slackMessage = $this->addToSlackMessage($slackMessage, $notifiable, $slackSettings);
         return $slackMessage;
     }
 
@@ -152,7 +155,7 @@ class GeneralNotificationAbstract extends Notification
         foreach ($nexmoSettings as $key => $value) {
             $nexmoMessage->$key($value);
         }
-        $nexmoMessage = $this->addToNexmoMessage($nexmoMessage, $notifiable);
+        $nexmoMessage = $this->addToNexmoMessage($nexmoMessage, $notifiable, $nexmoSettings);
 
         return $nexmoMessage;
     }

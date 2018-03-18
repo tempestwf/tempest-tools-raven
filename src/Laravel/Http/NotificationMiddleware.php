@@ -6,6 +6,8 @@ use Closure;
 use Illuminate\Http\Request;
 use TempestTools\Common\Contracts\ArrayHelperContract;
 use Illuminate\Events\Dispatcher;
+use TempestTools\Common\Contracts\HasArrayHelperContract;
+use TempestTools\Common\Exceptions\Laravel\Http\Middleware\CommonMiddlewareException;
 use TempestTools\Raven\Contracts\Orm\NotifiableEntityContract;
 use TempestTools\Raven\Laravel\Constants\ArrayHelperConstants;
 use TempestTools\Scribe\Contracts\Events\SimpleEventContract;
@@ -33,10 +35,15 @@ class NotificationMiddleware
      * @param Request $request
      * @param Closure $next
      * @return mixed
+     * @throws \TempestTools\Common\Exceptions\Laravel\Http\Middleware\CommonMiddlewareException
      */
     public function handle(Request $request, Closure $next)
     {
-        $arrayHelper = $request->route()->getController()->getArrayHelper();
+        $controller = $request->route()->getController();
+        if ($controller instanceof HasArrayHelperContract === false) {
+            throw CommonMiddlewareException::controllerDoesNotImplement('HasArrayHelperContract');
+        }
+        $arrayHelper = $controller->getArrayHelper();
         $this->setSharedArray($arrayHelper);
         Event::subscribe($this);
         return $next($request);

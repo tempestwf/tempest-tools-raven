@@ -110,6 +110,13 @@ class GeneralNotificationAbstract extends Notification
         $mailMessage = new MailMessage();
         $mailSettings = $this->getVia()[ViaTypesConstants::MAIL] ?? [];
         $mailSettings = $this->trimSettings($mailSettings);
+
+        if (array_key_exists('from', $mailSettings) === false) {
+            $mailMessage->from(env('DEFAULT_FROM_EMAIL'));
+        }
+        if (array_key_exists('replyTo', $mailSettings) === false) {
+            $mailMessage->replyTo(env('DEFAULT_REPLY_TO_EMAIL'));
+        }
         foreach ($mailSettings as $key => $value) {
             $mailMessage->$key($value);
         }

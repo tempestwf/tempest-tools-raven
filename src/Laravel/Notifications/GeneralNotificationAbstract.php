@@ -141,6 +141,12 @@ class GeneralNotificationAbstract extends Notification
         $slackMessage = new SlackMessage();
         $slackSettings = $this->getVia()[ViaTypesConstants::SLACK] ?? [];
         $slackSettings = $this->trimSettings($slackSettings);
+
+        if (array_key_exists('from', $slackSettings) === false) {
+            $slackSettings->from(env('DEFAULT_FROM_SLACK'));
+        }
+
+
         foreach ($slackSettings as $key => $value) {
             $slackMessage->$key($value);
         }
@@ -159,6 +165,13 @@ class GeneralNotificationAbstract extends Notification
         $nexmoMessage = new NexmoMessage();
         $nexmoSettings = $this->getVia()[ViaTypesConstants::NEXMO] ?? [];
         $nexmoSettings = $this->trimSettings($nexmoSettings);
+
+        if (array_key_exists('from', $nexmoSettings) === false) {
+            $nexmoSettings->from(env('DEFAULT_FROM_PHONE'));
+        }
+
+
+
         foreach ($nexmoSettings as $key => $value) {
             $nexmoMessage->$key($value);
         }

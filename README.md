@@ -4,7 +4,7 @@ This package contains libraries used to connect Tempest Tools Scribe enabled ent
 
 Please see the wiki for additional documentation.
 
-## key features
+## Key features
 
 * All the powers and capabilities of Scribe context sensitive configs now work with your notification system
 * Add notifications to Scribe configs easily with minimal code

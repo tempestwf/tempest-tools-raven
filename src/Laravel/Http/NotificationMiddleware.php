@@ -1,6 +1,6 @@
 <?php
 
-namespace TempestTools\Common\Laravel\Http\Middleware;
+namespace TempestTools\Raven\Laravel\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

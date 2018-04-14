@@ -1,17 +1,18 @@
 # Tempest Tools Raven
 
-This package contains libraries used to connect Tempest Tools Scribe enabled entities with Laravel notification system.
+This package contains libraries used to connect Tempest Tools Scribe enabled entities with Laravel's notification system.
 
-Please see the wiki for additional documentation.
+Please see the wiki for more documentation:
+https://github.com/tempestwf/tempest-tools-raven/wiki
 
-## Key features
+## key features
 
 * All the powers and capabilities of Scribe context sensitive configs now work with your notification system
 * Add notifications to Scribe configs easily with minimal code
-* Auto send notification that were added to Scribe by adding a middleware to the route
+* Auto send notification that have been added to Scribe by adding a middleware to the route
 * Configure the notification from inside the Scribe config
 * Write minimal code to create custom notifications as needed
-* Use the generic notification out of the box to not have to write any notification specific code (where applicable)
+* Use our generic notification's out of the box for many applications, preventing the need to write your own notification classes.
 
 ## Requirements
 

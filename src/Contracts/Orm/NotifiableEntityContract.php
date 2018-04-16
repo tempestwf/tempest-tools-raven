@@ -8,7 +8,6 @@
 
 namespace TempestTools\Raven\Contracts\Orm;
 
-
 use Doctrine\ORM\Event\PreFlushEventArgs;
 use TempestTools\Common\Contracts\ArrayHelperContract;
 use TempestTools\Scribe\Contracts\Orm\Helper\EntityArrayHelperContract;

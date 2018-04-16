@@ -1,6 +1,6 @@
 <?php
 
-namespace TempestTools\Common\Laravel\Http\Middleware;
+namespace TempestTools\Raven\Laravel\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
@@ -25,11 +25,6 @@ use TempestTools\Scribe\Laravel\Events\Controller\PostUpdate;
 class NotificationMiddleware
 {
     /**
-     * @var ArrayHelperContract
-     */
-    protected $sharedArray;
-
-    /**
      * Handle an incoming request. Stores the array helper for latter, and registers it's self to the scribe events that will trigger sending notifications.
      *
      * @param Request $request
@@ -44,7 +39,6 @@ class NotificationMiddleware
             throw CommonMiddlewareException::controllerDoesNotImplement('HasArrayHelperContract');
         }
         $arrayHelper = $controller->getArrayHelper();
-        $this->setSharedArray($arrayHelper);
         Event::subscribe($this);
         return $next($request);
     }
@@ -56,7 +50,8 @@ class NotificationMiddleware
      * @throws \RuntimeException
      */
     public function fireNotification(SimpleEventContract $event):void {
-        $array = $this->getSharedArray()->getArray();
+        $array = $event->getEventArgs()['controller']->getArrayHelper()->getArray();
+
         $registeredEntities = $array[ArrayHelperConstants::RAVEN_ARRAY_KEY] ?? [];
         /**
          * @var array $registeredEntities
@@ -88,21 +83,5 @@ class NotificationMiddleware
             self::class . '@fireNotification'
         );
 
-    }
-
-    /**
-     * @return ArrayHelperContract
-     */
-    public function getSharedArray(): ArrayHelperContract
-    {
-        return $this->sharedArray;
-    }
-
-    /**
-     * @param ArrayHelperContract $sharedArray
-     */
-    public function setSharedArray(ArrayHelperContract $sharedArray): void
-    {
-        $this->sharedArray = $sharedArray;
     }
 }

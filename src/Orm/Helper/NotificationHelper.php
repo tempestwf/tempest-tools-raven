@@ -34,17 +34,19 @@ class NotificationHelper implements NotificationHelperContract
      */
     public function registerForNotifications():void {
         $entity = $this->getEntity();
-        $array = $entity->getArrayHelper()->getArray();
-        $config = $entity->getConfigArrayHelper()->getArray();
-        $notificationsConfig = $config['notifications'] ?? [];
-        $params = $params = ['self' => $this, 'entity'=>$entity, 'notificationsConfig'=>$notificationsConfig];
-        $enabled = $config['notifications']['enable'] ?? true;
-        $enabled = $this->getEntity()->getConfigArrayHelper()->parse($enabled, $params);
-        if ($enabled === true && isset($config['notifications']) === true) {
-            if (isset($array[ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
-                $array[ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
+        if ($entity->getArrayHelper() !== null) {
+            $array = $entity->getArrayHelper()->getArray();
+            $config = $entity->getConfigArrayHelper()->getArray();
+            $notificationsConfig = $config['notifications'] ?? [];
+            $params = $params = ['self' => $this, 'entity'=>$entity, 'notificationsConfig'=>$notificationsConfig];
+            $enabled = $config['notifications']['enable'] ?? true;
+            $enabled = $this->getEntity()->getConfigArrayHelper()->parse($enabled, $params);
+            if ($enabled === true && isset($config['notifications']) === true) {
+                if (isset($array[ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
+                    $array[ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
+                }
+                $array[ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this->getEntity();
             }
-            $array[ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this->getEntity();
         }
     }
 
@@ -70,7 +72,7 @@ class NotificationHelper implements NotificationHelperContract
                 }
                 if ($value['notification'] !== null) {
                     $notification = $entity->getConfigArrayHelper()->parse($value['notification'], $params);
-                    $this->populateNotificationDetails($notificationsConfig, $params, $notification);
+                    $this->populateNotificationDetails($value, $params, $notification);
                     $entity->notify($notification);
                 }
             }
@@ -94,6 +96,7 @@ class NotificationHelper implements NotificationHelperContract
         foreach ($viaConfig as $key => $value) {
             if (!isset($value['settings']['closure']) || $entity->getConfigArrayHelper()->parse($value['settings']['closure'], $params) === true) {
                 if (isset($value['to'])) {
+                    $value['to'] = $entity->getConfigArrayHelper()->parse($value['to'], $params);
                     if ($key === ViaTypesConstants::MAIL) {
                         $entity->setMailTo($value['to']);
                     } else if ($key === ViaTypesConstants::NEXMO) {

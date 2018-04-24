@@ -6,7 +6,7 @@
  * Time: 7:32 PM
  */
 
-namespace TempestTools\Raven\Laravel\Constants;
+namespace TempestTools\Raven\Constants;
 
 
 use LaravelDoctrine\ORM\Notifications\DoctrineChannel;

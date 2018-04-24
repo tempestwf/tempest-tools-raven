@@ -9,7 +9,7 @@ use Illuminate\Events\Dispatcher;
 use TempestTools\Common\Contracts\HasArrayHelperContract;
 use TempestTools\Common\Exceptions\Laravel\Http\Middleware\CommonMiddlewareException;
 use TempestTools\Raven\Contracts\Orm\NotifiableEntityContract;
-use TempestTools\Raven\Laravel\Constants\ArrayHelperConstants;
+use TempestTools\Raven\Constants\ArrayHelperConstants;
 use TempestTools\Scribe\Contracts\Events\SimpleEventContract;
 use TempestTools\Scribe\Laravel\Events\Controller\PostDestroy;
 use TempestTools\Scribe\Laravel\Events\Controller\PostStore;

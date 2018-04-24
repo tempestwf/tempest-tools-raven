@@ -6,7 +6,7 @@
  * Time: 10:26 PM
  */
 
-namespace TempestTools\Raven\Laravel\Constants;
+namespace TempestTools\Raven\Constants;
 
 
 class ArrayHelperConstants

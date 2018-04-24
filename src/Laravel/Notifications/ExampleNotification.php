@@ -6,7 +6,7 @@
  * Time: 5:22 PM
  */
 
-namespace TempestTools\Raven\Laravel\Orm\Notification;
+namespace TempestTools\Raven\Laravel\Notifications;
 
 
 class ExampleNotification extends GeneralNotificationAbstract

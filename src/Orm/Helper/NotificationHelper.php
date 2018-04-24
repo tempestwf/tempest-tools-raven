@@ -14,7 +14,7 @@ use TempestTools\Raven\Contracts\Orm\Helper\NotificationHelperContract;
 use TempestTools\Raven\Contracts\Orm\NotifiableEntityContract;
 use TempestTools\Raven\Laravel\Constants\ArrayHelperConstants;
 use TempestTools\Raven\Laravel\Constants\ViaTypesConstants;
-use TempestTools\Raven\Laravel\Orm\Notification\GeneralNotificationAbstract;
+use TempestTools\Raven\Laravel\Notifications\GeneralNotificationAbstract;
 
 class NotificationHelper implements NotificationHelperContract
 {

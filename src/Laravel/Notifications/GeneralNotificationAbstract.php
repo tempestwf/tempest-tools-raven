@@ -1,6 +1,6 @@
 <?php
 
-namespace TempestTools\Raven\Laravel\Orm\Notification;
+namespace TempestTools\Raven\Laravel\Notifications;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\NexmoMessage;

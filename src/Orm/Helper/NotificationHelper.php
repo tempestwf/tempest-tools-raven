@@ -9,6 +9,7 @@
 namespace TempestTools\Raven\Orm\Helper;
 
 
+use TempestTools\Common\Constants\CommonArrayObjectKeyConstants;
 use TempestTools\Raven\Contracts\Orm\Helper\NotificationHelperContract;
 use TempestTools\Raven\Contracts\Orm\NotifiableEntityContract;
 use TempestTools\Raven\Laravel\Constants\ArrayHelperConstants;
@@ -42,10 +43,10 @@ class NotificationHelper implements NotificationHelperContract
             $enabled = $config['notifications']['enable'] ?? true;
             $enabled = $this->getEntity()->getConfigArrayHelper()->parse($enabled, $params);
             if ($enabled === true && isset($config['notifications']) === true) {
-                if (isset($array[ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
-                    $array[ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
+                if (isset($array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
+                    $array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
                 }
-                $array[ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this->getEntity();
+                $array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this->getEntity();
             }
         }
     }

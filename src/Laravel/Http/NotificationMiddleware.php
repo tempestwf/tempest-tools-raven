@@ -4,7 +4,7 @@ namespace TempestTools\Raven\Laravel\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use TempestTools\Common\Contracts\ArrayHelperContract;
+use TempestTools\Common\Constants\CommonArrayObjectKeyConstants;
 use Illuminate\Events\Dispatcher;
 use TempestTools\Common\Contracts\HasArrayHelperContract;
 use TempestTools\Common\Exceptions\Laravel\Http\Middleware\CommonMiddlewareException;
@@ -38,7 +38,7 @@ class NotificationMiddleware
         if ($controller instanceof HasArrayHelperContract === false) {
             throw CommonMiddlewareException::controllerDoesNotImplement('HasArrayHelperContract');
         }
-        $arrayHelper = $controller->getArrayHelper();
+        //$arrayHelper = $controller->getArrayHelper();
         Event::subscribe($this);
         return $next($request);
     }
@@ -52,7 +52,7 @@ class NotificationMiddleware
     public function fireNotification(SimpleEventContract $event):void {
         $array = $event->getEventArgs()['controller']->getArrayHelper()->getArray();
 
-        $registeredEntities = $array[ArrayHelperConstants::RAVEN_ARRAY_KEY] ?? [];
+        $registeredEntities = $array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY] ?? [];
         /**
          * @var array $registeredEntities
          */

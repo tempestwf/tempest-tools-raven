@@ -7,7 +7,7 @@ use Illuminate\Notifications\Messages\NexmoMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
-use TempestTools\Raven\Laravel\Constants\ViaTypesConstants;
+use TempestTools\Raven\Constants\ViaTypesConstants;
 use TempestTools\Scribe\Contracts\Orm\EntityContract;
 
 class GeneralNotificationAbstract extends Notification

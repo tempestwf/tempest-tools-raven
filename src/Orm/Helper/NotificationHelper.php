@@ -36,17 +36,16 @@ class NotificationHelper implements NotificationHelperContract
     public function registerForNotifications():void {
         $entity = $this->getEntity();
         if ($entity->getArrayHelper() !== null) {
-            $array = $entity->getArrayHelper()->getArray();
             $config = $entity->getConfigArrayHelper()->getArray();
             $notificationsConfig = $config['notifications'] ?? [];
             $params = $params = ['self' => $this, 'entity'=>$entity, 'notificationsConfig'=>$notificationsConfig];
             $enabled = $config['notifications']['enable'] ?? true;
             $enabled = $this->getEntity()->getConfigArrayHelper()->parse($enabled, $params);
             if ($enabled === true && isset($config['notifications']) === true) {
-                if (isset($array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
-                    $array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
+                if (isset($entity->getArrayHelper()->getArray()[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY])) {
+                    $entity->getArrayHelper()->getArray()[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY] = [];
                 }
-                $array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this->getEntity();
+                $entity->getArrayHelper()->getArray()[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY][] = $this->getEntity();
             }
         }
     }

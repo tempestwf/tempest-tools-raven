@@ -53,6 +53,7 @@ class NotificationMiddleware
         $array = $event->getEventArgs()['controller']->getArrayHelper()->getArray();
 
         $registeredEntities = $array[CommonArrayObjectKeyConstants::ORM_KEY_NAME][ArrayHelperConstants::RAVEN_ARRAY_KEY] ?? [];
+        //$arrayCopy = $event->getEventArgs()->getArrayCopy();
         /**
          * @var array $registeredEntities
          */

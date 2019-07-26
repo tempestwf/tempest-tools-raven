@@ -1,0 +1,22 @@
+{
+    "name": "tempest-tools/raven",
+    "description": "Tools for building sending notifications from Scribe managed entities",
+    "keywords": ["doctrine", "orm", "database", "laravel", "middleware", "tempest tools", "REST"],
+    "require": {
+        "tempest-tools/scribe": "1.0.*"
+    },
+    "require-dev": {
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "TempestTools\\Raven\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "William Tempest Wright Ferrer",
+            "email": "tempestwf@gmail.com"
+        }
+    ]
+}
